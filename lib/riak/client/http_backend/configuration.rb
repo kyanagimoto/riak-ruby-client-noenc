@@ -112,10 +112,14 @@ module Riak
         # @param [String] query the Lucene-style query string
         # @param [Hash] options additional query options
         def solr_select_path(index, query, options={})
-          raise t('search_unsupported') unless riak_solr_searcher_wm
+          raise t('search_unsupported') unless riak_solr_searcher_wm || (yz_wm_search && index)
           options = {"q" => query, "wt" => "json"}.merge(options)
           if index
-            path(riak_solr_searcher_wm, index, 'select', options)
+            if yz_wm_search
+              path(yz_wm_search, index, options)
+            else
+              path(riak_solr_searcher_wm, index, 'select', options)
+            end
           else
             path(riak_solr_searcher_wm, 'select', options)
           end
@@ -196,6 +200,10 @@ module Riak
 
         def riak_solr_searcher_wm
           server_config[:riak_solr_searcher_wm]
+        end
+
+        def yz_wm_search
+          server_config[:yz_wm_search]
         end
 
         def riak_solr_indexer_wm

@@ -1,3 +1,4 @@
+# require 'spec_helper'
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', '..', '..', 'lib'))
 
@@ -6,10 +7,18 @@ require 'riak'
 require 'rspec'
 require 'rexml/document'
 
-describe "Yokozuna" do
+RSpec.configure do |c|
+  # declare an exclusion filter
+  @http_port ||= 10018 # test_server.http_port
+  @client = Riak::Client.new(:http_port => @http_port)
+  yz_active = @client.ping rescue false
+  c.filter_run_excluding :yokozuna => !yz_active
+end
+
+describe "Yokozuna", :yokozuna => true do
   before(:all) do
-    @pbc_port ||= 10017  #test_server.pb_port
-    @http_port ||= 10018 #test_server.http_port
+    @pbc_port ||= 10017  # test_server.pb_port
+    @http_port ||= 10018 # test_server.http_port
     @pb_client = Riak::Client.new(:http_port => @http_port, :pb_port => @pbc_port, :protocol => "pbc")
     @http_client = Riak::Client.new(:http_port => @http_port)
     @index = "test"
@@ -40,8 +49,8 @@ describe "Yokozuna" do
 
     it "should search with df" do
       resp = @pb_client.search("test", "Olive", {:rows => 1, :df => 'dog_ss'})
-      # p resp
       resp.should include('docs')
+      resp['docs'].size.should == 1
       resp['docs'].first['dog_ss']
     end
   end
@@ -52,6 +61,7 @@ describe "Yokozuna" do
       root = REXML::Document.new(resp).root
       root.name.should == 'response'
       doc = root.elements['result'].elements['doc']
+      doc.should_not be_nil
       cats = doc.elements["str[@name='cat_s']"]
       cats.should have(1).item
       cats.text.should == 'Lela'
@@ -59,7 +69,6 @@ describe "Yokozuna" do
 
     it "should search as JSON with df" do
       resp = @http_client.search("test", "Olive", {:rows => 1, :wt => 'json', :df => 'dog_ss'})
-      # p resp
     end
   end
 end

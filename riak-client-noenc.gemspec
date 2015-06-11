@@ -3,13 +3,13 @@ require 'riak/version'
 
 Gem::Specification.new do |gem|
   # Meta
-  gem.name = "riak-client"
+  gem.name = "riak-client-noenc"
   gem.version = Riak::VERSION
   gem.summary = %Q{riak-client is a rich client for Riak, the distributed database by Basho.}
   gem.description = %Q{riak-client is a rich client for Riak, the distributed database by Basho. It supports the full HTTP and Protocol Buffers interfaces including storage operations, bucket configuration, link-walking, secondary indexes and map-reduce.}
-  gem.email = ['bryce@basho.com']
-  gem.homepage = "http://github.com/basho/riak-ruby-client"
-  gem.authors = ['Bryce Kerley']
+  gem.email = ['kyanagi1107@gmail.com']
+  gem.homepage = "http://github.com/kyanagimoto/riak-ruby-client-noenc"
+  gem.authors = ['kyanagimoto']
   gem.license = 'Apache 2.0'
 
   gem.required_ruby_version = '>= 1.9.3'

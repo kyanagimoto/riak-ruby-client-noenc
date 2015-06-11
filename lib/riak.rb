@@ -1,4 +1,3 @@
-require 'riak/encoding'
 require 'riak/core_ext'
 require 'riak/client'
 require 'riak/map_reduce'

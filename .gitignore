@@ -40,3 +40,5 @@ vendor/riak
 .ruby-version
 tmp
 tags
+
+*.gem
